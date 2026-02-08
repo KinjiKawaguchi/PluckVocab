@@ -1,0 +1,100 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - main
+      - ci/*
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/cache@v4
+        id: cache
+        with:
+          path: node_modules
+          key: deps-${{ hashFiles('bun.lockb') }}
+      - run: bun install --frozen-lockfile
+        if: steps.cache.outputs.cache-hit != 'true'
+
+  typecheck:
+    needs: install
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: deps-${{ hashFiles('bun.lockb') }}
+          fail-on-cache-miss: true
+      - run: bun run typecheck
+
+  lint:
+    needs: install
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: deps-${{ hashFiles('bun.lockb') }}
+          fail-on-cache-miss: true
+      - run: bun run lint
+
+  build:
+    needs: install
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: deps-${{ hashFiles('bun.lockb') }}
+          fail-on-cache-miss: true
+      - run: bun run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: extension-dist
+          path: dist/
+
+  e2e:
+    needs: install
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: deps-${{ hashFiles('bun.lockb') }}
+          fail-on-cache-miss: true
+      - run: bun run build
+      - run: echo "version=$(bunx playwright --version)" >> "$GITHUB_OUTPUT"
+        id: pw-version
+      - uses: actions/cache@v4
+        id: pw-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: pw-${{ steps.pw-version.outputs.version }}
+      - run: bunx playwright install chromium --with-deps
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+      - run: bunx playwright install-deps chromium
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+      - run: xvfb-run bun run test:e2e
