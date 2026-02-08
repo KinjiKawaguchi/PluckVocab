@@ -3,12 +3,7 @@
   "name": "PluckVocab",
   "version": "1.0.0",
   "description": "Pluck words from any page to build your vocabulary.",
-  "permissions": [
-    "contextMenus",
-    "storage",
-    "activeTab",
-    "scripting"
-  ],
+  "permissions": ["contextMenus", "storage", "activeTab", "scripting"],
   "background": {
     "service_worker": "service-worker.js"
   },
