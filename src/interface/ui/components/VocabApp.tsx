@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { type StoragePort, Vocab, type Word, isOk } from "../../../domain/index.js";
+import { isOk, type StoragePort, Vocab, type Word } from "../../../domain/index.js";
 import { createStorage } from "../../../infrastructure/storage/index.js";
 import { VocabList } from "./VocabList.js";
 

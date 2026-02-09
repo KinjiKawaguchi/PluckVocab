@@ -2,10 +2,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   type BrowserContext,
-  type Page,
-  type Worker,
   test as base,
   chromium,
+  type Page,
+  type Worker,
 } from "@playwright/test";
 
 const DIST_PATH = resolve(dirname(fileURLToPath(import.meta.url)), "../../dist");

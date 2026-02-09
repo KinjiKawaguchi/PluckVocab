@@ -1,14 +1,14 @@
 import {
-  Pluck,
-  Source,
-  type StoragePort,
-  Vocab,
-  type Word,
   createPluckedAt,
   createSourceTitle,
   createSourceUrl,
   err,
   ok,
+  Pluck,
+  Source,
+  type StoragePort,
+  Vocab,
+  type Word,
 } from "../../domain/index.js";
 
 const STORAGE_KEY = "pluckvocab_vocab";
