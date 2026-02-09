@@ -33,6 +33,7 @@ bun run open    # launch chromium with extension loaded
 | `bun run lint:fix` | Lint and auto-fix |
 | `bun run format` | Format with Biome |
 | `bun run typecheck` | Type check with tsc |
+| `bun run test:unit` | Run unit tests |
 | `bun run test:e2e` | Run Playwright E2E tests |
 | `bun run zip` | Package `dist/` into `pluckvocab.zip` |
 

@@ -12,6 +12,7 @@
     "format": "bunx biome format --write .",
     "typecheck": "bunx tsc --noEmit",
     "zip": "cd dist && zip -r ../pluckvocab.zip .",
+    "test:unit": "bun test tests/unit/",
     "test:e2e": "playwright test",
     "open": "bun run scripts/open-browser.ts"
   },
