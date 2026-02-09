@@ -1,11 +1,9 @@
 import type { StoragePort } from "../../domain/index.js";
 import { createLocalStorage } from "./local.js";
-
-const BACKEND_KEY = "pluckvocab_storage_backend";
+import { loadBackendSetting } from "./settings.js";
 
 export const createStorage = async (): Promise<StoragePort> => {
-  const result = await chrome.storage.local.get(BACKEND_KEY);
-  const backendType = result[BACKEND_KEY] as string | undefined;
+  const backendType = await loadBackendSetting();
 
   switch (backendType) {
     case "local":
