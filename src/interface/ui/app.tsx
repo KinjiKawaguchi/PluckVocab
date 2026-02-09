@@ -1,7 +1,4 @@
-import { render } from "preact";
-import { VocabApp } from "./components/VocabApp.js";
+import { initVocabApp } from "./initVocabApp.js";
 
 const container = document.getElementById("vocab-container");
-if (container) {
-  render(<VocabApp />, container);
-}
+if (container) initVocabApp(container);

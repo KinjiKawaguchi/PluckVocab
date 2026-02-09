@@ -1,31 +1,13 @@
-import { useEffect, useState } from "preact/hooks";
-import { isOk, type StoragePort, Vocab, type Word } from "../../../domain/index.js";
-import { createStorage } from "../../../infrastructure/storage/index.js";
+import type { Vocab } from "../../../domain/index.js";
+import { useVocabActions } from "../hooks/useVocabActions.js";
 import { VocabList } from "./VocabList.js";
 
-export const VocabApp = () => {
-  const [vocab, setVocab] = useState(Vocab.empty());
-  const [storage, setStorage] = useState<StoragePort | null>(null);
+type Props = {
+  readonly initialVocab: Vocab;
+  readonly persist: (vocab: Vocab) => void;
+};
 
-  useEffect(() => {
-    const init = async () => {
-      const s = await createStorage();
-      setStorage(s);
-      const result = await s.load();
-      if (isOk(result)) {
-        setVocab(result.value);
-      }
-    };
-    init();
-  }, []);
-
-  const handleRemove = async (word: Word) => {
-    const next = vocab.remove(word);
-    setVocab(next);
-    if (storage) {
-      await storage.save(next);
-    }
-  };
-
-  return <VocabList vocab={vocab} onRemove={handleRemove} />;
+export const VocabApp = ({ initialVocab, persist }: Props) => {
+  const { vocab, remove } = useVocabActions(initialVocab, persist);
+  return <VocabList vocab={vocab} onRemove={remove} />;
 };

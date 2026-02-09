@@ -1,23 +1,18 @@
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 
-const BACKEND_KEY = "pluckvocab_storage_backend";
+type Props = {
+  readonly initialBackend: string;
+  readonly onSave: (backend: string) => Promise<void>;
+};
 
-export const OptionsApp = () => {
-  const [backend, setBackend] = useState("local");
+export const OptionsApp = ({ initialBackend, onSave }: Props) => {
+  const [backend, setBackend] = useState(initialBackend);
   const [status, setStatus] = useState("");
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    chrome.storage.local.get(BACKEND_KEY).then((result) => {
-      setBackend((result[BACKEND_KEY] as string) ?? "local");
-    });
-  }, []);
 
   const handleSave = async () => {
-    await chrome.storage.local.set({ [BACKEND_KEY]: backend });
+    await onSave(backend);
     setStatus("Saved.");
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => setStatus(""), 2000);
+    setTimeout(() => setStatus(""), 2000);
   };
 
   return (
