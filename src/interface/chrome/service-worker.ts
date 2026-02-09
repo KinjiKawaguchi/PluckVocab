@@ -1,15 +1,15 @@
 import {
-  Pluck,
-  type PluckError,
-  type Result,
-  Source,
-  type StorageError,
   createPluckedAt,
   createSourceTitle,
   createSourceUrl,
   createWord,
   flatMapAsync,
   map,
+  Pluck,
+  type PluckError,
+  type Result,
+  Source,
+  type StorageError,
 } from "../../domain/index.js";
 import { createStorage } from "../../infrastructure/storage/index.js";
 import { getSelectionFromTab } from "./selection.js";

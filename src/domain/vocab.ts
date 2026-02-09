@@ -1,4 +1,4 @@
-import { type Result, err, ok } from "./result.js";
+import { err, ok, type Result } from "./result.js";
 
 // === Branded Types ===
 
