@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import { expect, test } from "./fixtures.js";
 
 test("options page shows select and Save button", async ({ page, extensionId }) => {
@@ -12,4 +13,18 @@ test("Save button shows 'Saved.' message", async ({ page, extensionId }) => {
 
   await page.locator("section").getByRole("button", { name: "Save" }).click();
   await expect(page.locator("section #status")).toHaveText("Saved.");
+});
+
+test("import JSON file adds words to vocabulary", async ({ page, extensionId }) => {
+  await page.goto(`chrome-extension://${extensionId}/options.html`);
+
+  const fileChooserPromise = page.waitForEvent("filechooser");
+  await page.getByRole("button", { name: "Import" }).click();
+  const fileChooser = await fileChooserPromise;
+  await fileChooser.setFiles(resolve(import.meta.dirname, "fixtures/import-sample.json"));
+
+  await expect(page.locator("section #status")).toHaveText("Imported.");
+
+  await page.goto(`chrome-extension://${extensionId}/popup.html`);
+  await expect(page.locator(".vocab-word").first()).toHaveText("vocabulary");
 });
