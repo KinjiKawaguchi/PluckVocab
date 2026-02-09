@@ -5,14 +5,14 @@ test("options page shows select and Save button", async ({ page, extensionId }) 
   await page.goto(`chrome-extension://${extensionId}/options.html`);
 
   await expect(page.locator("select#storage-backend")).toBeVisible();
-  await expect(page.locator("section").getByRole("button", { name: "Save" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Save" })).toBeVisible();
 });
 
 test("Save button shows 'Saved.' message", async ({ page, extensionId }) => {
   await page.goto(`chrome-extension://${extensionId}/options.html`);
 
-  await page.locator("section").getByRole("button", { name: "Save" }).click();
-  await expect(page.locator("section #status")).toHaveText("Saved.");
+  await page.getByRole("button", { name: "Save" }).click();
+  await expect(page.locator("#status")).toHaveText("Saved.");
 });
 
 test("import JSON file adds words to vocabulary", async ({ page, extensionId }) => {
@@ -23,7 +23,7 @@ test("import JSON file adds words to vocabulary", async ({ page, extensionId }) 
   const fileChooser = await fileChooserPromise;
   await fileChooser.setFiles(resolve(import.meta.dirname, "fixtures/import-sample.json"));
 
-  await expect(page.locator("section #status")).toHaveText("Imported.");
+  await expect(page.locator("#data-status")).toHaveText("Imported.");
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   await expect(page.locator(".vocab-word").first()).toHaveText("vocabulary");

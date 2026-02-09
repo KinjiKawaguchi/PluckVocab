@@ -1,5 +1,5 @@
 import { err, ok, type StoragePort, Vocab } from "../../domain/index.js";
-import { deserializeVocab, type SerializedEntry, serializeVocab } from "./serialization.js";
+import { deserializeVocab, type SerializedEntry, serializeVocab } from "../serialization.js";
 
 const STORAGE_KEY = "pluckvocab_vocab";
 

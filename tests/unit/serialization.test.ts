@@ -8,10 +8,7 @@ import {
   Vocab,
   type Word,
 } from "../../src/domain/index.js";
-import {
-  deserializeVocab,
-  serializeVocab,
-} from "../../src/infrastructure/storage/serialization.js";
+import { deserializeVocab, serializeVocab } from "../../src/infrastructure/serialization.js";
 
 const word = (s: string) => s as Word;
 const pluck = (at: number, url: string, title: string) =>

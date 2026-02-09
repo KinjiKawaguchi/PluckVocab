@@ -6,7 +6,7 @@ import {
   Source,
   Vocab,
   type Word,
-} from "../../domain/index.js";
+} from "../domain/index.js";
 
 export type SerializedPluck = { at: number; source: { url: string; title: string } };
 export type SerializedEntry = { word: string; plucks: SerializedPluck[] };

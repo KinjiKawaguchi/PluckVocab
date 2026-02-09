@@ -1,66 +1,17 @@
-import { useRef, useState } from "preact/hooks";
+import type { Result } from "../../../domain/index.js";
+import { DataSection } from "./DataSection.js";
+import { SettingsSection } from "./SettingsSection.js";
 
 type Props = {
   readonly initialBackend: string;
   readonly onSave: (backend: string) => Promise<void>;
-  readonly onExport: () => Promise<string>;
-  readonly onImport: (file: File) => Promise<string>;
+  readonly onExport: () => Promise<Result<void, string>>;
+  readonly onImport: (file: File) => Promise<Result<void, string>>;
 };
 
-export const OptionsApp = ({ initialBackend, onSave, onExport, onImport }: Props) => {
-  const [backend, setBackend] = useState(initialBackend);
-  const [status, setStatus] = useState("");
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  const showStatus = (message: string) => {
-    setStatus(message);
-    setTimeout(() => setStatus(""), 3000);
-  };
-
-  const handleSave = async () => {
-    await onSave(backend);
-    showStatus("Saved.");
-  };
-
-  const handleExport = async () => {
-    showStatus(await onExport());
-  };
-
-  const handleImport = async (e: Event) => {
-    const file = (e.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    showStatus(await onImport(file));
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
-
-  return (
-    <>
-      <section>
-        <label for="storage-backend">Storage Backend</label>
-        <select
-          id="storage-backend"
-          value={backend}
-          onChange={(e) => setBackend((e.target as HTMLSelectElement).value)}
-        >
-          <option value="local">Local Storage</option>
-        </select>
-        <button type="button" onClick={handleSave}>
-          Save
-        </button>
-        <p id="status">{status}</p>
-      </section>
-      <section class="data-section">
-        <h2>Data</h2>
-        <div class="data-actions">
-          <button type="button" onClick={handleExport}>
-            Export
-          </button>
-          <button type="button" onClick={() => fileInputRef.current?.click()}>
-            Import
-          </button>
-          <input ref={fileInputRef} type="file" accept=".json" hidden onChange={handleImport} />
-        </div>
-      </section>
-    </>
-  );
-};
+export const OptionsApp = ({ initialBackend, onSave, onExport, onImport }: Props) => (
+  <>
+    <SettingsSection initialBackend={initialBackend} onSave={onSave} />
+    <DataSection onExport={onExport} onImport={onImport} />
+  </>
+);
