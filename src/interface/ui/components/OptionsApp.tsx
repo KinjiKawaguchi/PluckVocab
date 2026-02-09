@@ -1,15 +1,13 @@
 import { useRef, useState } from "preact/hooks";
-import type { StoragePort } from "../../../domain/index.js";
-import { isOk } from "../../../domain/index.js";
-import { exportVocab, importVocab } from "../vocabTransfer.js";
 
 type Props = {
   readonly initialBackend: string;
   readonly onSave: (backend: string) => Promise<void>;
-  readonly storage: StoragePort;
+  readonly onExport: () => Promise<string>;
+  readonly onImport: (file: File) => Promise<string>;
 };
 
-export const OptionsApp = ({ initialBackend, onSave, storage }: Props) => {
+export const OptionsApp = ({ initialBackend, onSave, onExport, onImport }: Props) => {
   const [backend, setBackend] = useState(initialBackend);
   const [status, setStatus] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -25,36 +23,13 @@ export const OptionsApp = ({ initialBackend, onSave, storage }: Props) => {
   };
 
   const handleExport = async () => {
-    const result = await storage.load();
-    if (!isOk(result)) {
-      showStatus("Failed to load vocabulary.");
-      return;
-    }
-    exportVocab(result.value);
-    showStatus("Exported.");
+    showStatus(await onExport());
   };
 
   const handleImport = async (e: Event) => {
     const file = (e.target as HTMLInputElement).files?.[0];
     if (!file) return;
-
-    try {
-      const result = await storage.load();
-      if (!isOk(result)) {
-        showStatus("Failed to load current vocabulary.");
-        return;
-      }
-      const merged = await importVocab(result.value, file);
-      const saveResult = await storage.save(merged);
-      if (!isOk(saveResult)) {
-        showStatus("Failed to save vocabulary.");
-        return;
-      }
-      showStatus("Imported.");
-    } catch {
-      showStatus("Invalid file.");
-    }
-
+    showStatus(await onImport(file));
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 

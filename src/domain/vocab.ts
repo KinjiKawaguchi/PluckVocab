@@ -60,6 +60,16 @@ export class Vocab {
     return new Vocab(new Map([...this.entries, [word, [...existing, pluck]]]));
   }
 
+  merge(other: Vocab): Vocab {
+    let result: Vocab = this;
+    for (const [word, plucks] of other) {
+      for (const pluck of plucks) {
+        result = result.add(word, pluck);
+      }
+    }
+    return result;
+  }
+
   remove(word: Word): Vocab {
     const next = new Map(this.entries);
     next.delete(word);
