@@ -1,0 +1,14 @@
+[
+  {
+    "word": "vocabulary",
+    "plucks": [
+      {
+        "at": 1700000000000,
+        "source": {
+          "url": "https://example.com/article",
+          "title": "Sample Article"
+        }
+      }
+    ]
+  }
+]

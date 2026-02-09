@@ -1,34 +1,17 @@
-import { useState } from "preact/hooks";
+import type { Result } from "../../../domain/index.js";
+import { DataSection } from "./DataSection.js";
+import { SettingsSection } from "./SettingsSection.js";
 
 type Props = {
   readonly initialBackend: string;
   readonly onSave: (backend: string) => Promise<void>;
+  readonly onExport: () => Promise<Result<void, string>>;
+  readonly onImport: (file: File) => Promise<Result<void, string>>;
 };
 
-export const OptionsApp = ({ initialBackend, onSave }: Props) => {
-  const [backend, setBackend] = useState(initialBackend);
-  const [status, setStatus] = useState("");
-
-  const handleSave = async () => {
-    await onSave(backend);
-    setStatus("Saved.");
-    setTimeout(() => setStatus(""), 2000);
-  };
-
-  return (
-    <section>
-      <label for="storage-backend">Storage Backend</label>
-      <select
-        id="storage-backend"
-        value={backend}
-        onChange={(e) => setBackend((e.target as HTMLSelectElement).value)}
-      >
-        <option value="local">Local Storage</option>
-      </select>
-      <button type="button" onClick={handleSave}>
-        Save
-      </button>
-      <p id="status">{status}</p>
-    </section>
-  );
-};
+export const OptionsApp = ({ initialBackend, onSave, onExport, onImport }: Props) => (
+  <>
+    <SettingsSection initialBackend={initialBackend} onSave={onSave} />
+    <DataSection onExport={onExport} onImport={onImport} />
+  </>
+);
