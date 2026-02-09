@@ -55,6 +55,20 @@ jobs:
           fail-on-cache-miss: true
       - run: bun run lint
 
+  unit:
+    needs: install
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: deps-${{ hashFiles('bun.lockb') }}
+          fail-on-cache-miss: true
+      - run: bun run test:unit
+
   build:
     needs: install
     runs-on: ubuntu-latest
