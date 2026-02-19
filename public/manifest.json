@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "PluckVocab",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Pluck words from any page to build your vocabulary.",
   "permissions": ["contextMenus", "storage", "activeTab", "scripting"],
   "background": {
